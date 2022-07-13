@@ -1,0 +1,99 @@
+﻿@model IEnumerable<todo.Models.ToDo>
+
+
+<div class="text-center">
+    <h1 class="display-4">ToDo List</h1>
+</div>
+<div class="container w-75">
+    <div class="row pt-4">
+        <div class="col-6">
+            <!-- Add new-->
+        </div>
+    </div>
+    @if (Model.Count() > 0)
+    {
+        var finished = 0;
+        var unfinished = 0;
+        foreach (var obj in Model)
+        {
+            if (obj.IsDone) finished++;
+            else unfinished++;
+        }
+        <p class="text-right"><em><mark>@unfinished</mark> more to do, <mark>@finished</mark> is done</em></p>
+    }
+    <br/>
+    <form asp-action="Index">
+        <input class="form-control w-50" name="serachPhrase" style="display:inline-block" placeholder="type to search" />
+        <button style="display:inline-block" class="btn btn-info">Search</button>
+    </form>
+    <div style="float:right" class="btn-group" role="group">
+        <form method="post" asp-action="Index">
+            <input name="serachPhrase" style="display:none"/>
+            <button class="btn btn-info">All</button>
+        </form>
+        <form method="post" asp-action="Index">
+            <input name="serachPhrase" style="display: none"value="1"/>
+            <button class="btn btn-info">Done</button>
+        </form>
+        <form method="post" asp-action="Index">
+            <input name="serachPhrase" style="display: none" value="2" />
+            <button class="btn btn-info">Active</button>
+        </form>
+    </div>
+
+    <br />
+
+    @if (Model.Count() > 0)
+    {
+        <table class="table" style="width:100%;">
+            <thead>
+                <tr>
+                    <th>Done</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+
+
+<tr>
+    <td width="10%">
+        <form method="post" asp-action="Done" asp-route-Id="@obj.Id">
+            @if (obj.IsDone)
+            {<button class="btn btn-default">✅</button>
+            }
+            else {<button class="btn btn-default">🟩</button> }
+
+        </form>
+        </td>
+            <td width="80%">@obj.Name</td>
+            <td width="10%" class="text-lg-center">
+                <div class="btn-group" role="group">
+                    <form method="post" asp-action="Delete" asp-route-Id="@obj.Id">
+                        <button class="btn btn-default">❌</button>
+                    </form>
+
+                </div>
+            </td>
+        </tr>
+    }
+</tbody>
+</table>
+    }
+    else
+    {
+<p>ToDo List is empty.</p>
+    }
+
+<form method="post" asp-action="Create">
+    <input type="checkbox" style="display:none" name="IsDone">
+    <input style="display:inline-block" type="text" class="form-control w-50" placeholder="What needs to be done?" name="Name" />
+    <button style="display:inline-block" type="submit" class="btn btn-info">Add</button>
+</form>
+</div>
+
+
+@section Scripts{
+
+}
